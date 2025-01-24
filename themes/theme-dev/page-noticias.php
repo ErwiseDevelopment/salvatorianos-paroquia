@@ -27,56 +27,21 @@ get_header();
 
 					<div class="w-full">
 						<?php
-						$news_category_slug = get_categories_setting()['categories']['news']['slug'];
+						$request_post = wp_remote_get(get_post_detail_api());
 
-						$news_category = get_category_by_slug($news_category_slug);
+						if (!is_wp_error($request_post)) :
+							$body = wp_remote_retrieve_body($request_post);
 
-						if (isset($_GET['editoria'])) {
-							$editorial_category_slug = get_categories_setting()['editorials'][$_GET['editoria']]['slug'];
+							$data = json_decode($body);
 
-							$editorial_category = get_category_by_slug($editorial_category_slug);
+							$post_highlight = $data[0];
 
-							$featured_category = get_category_by_slug('destaque');
-
-							$news_featured_args = array(
-								'posts_per_page' => 1,
-								'post_type'      => 'post',
-								'tax_query'      => array(
-									'relation' => 'AND',
-									array(
-										'taxonomy' => 'category',
-										'field'    => 'term_id',
-										'terms'    => $news_category->term_id
-									),
-									array(
-										'taxonomy' => 'category',
-										'field'    => 'term_id',
-										'terms'    => $editorial_category->term_id
-									),
-									array(
-										'taxonomy' => 'category',
-										'field'    => 'term_id',
-										'terms'    => $featured_category->term_id
-									),
-								)
-							);
-						} else {
-							$news_featured_args = array(
-								'posts_per_page' => 1,
-								'post_type'      => 'post',
-								'category_name'  => $news_category->slug,
-								'order'          => 'DESC'
-							);
-						}
-
-						$news_featured = new WP_Query($news_featured_args);
-
-						if ($news_featured->have_posts()):
-							while ($news_featured->have_posts()): $news_featured->the_post();
+							if (!is_wp_error($post_highlight)) :
+								array_push($posts_ids_hidden, $post_highlight->id);
 						?>
-								<a class="news-item" href="<?php the_permalink() ?>">
+								<a class="news-item" href="<?php echo $post_highlight->link; ?>">
 									<div class="w-full h-full">
-										<?php echo get_post_thumbnail_custom('news-item-thumbnail') ?>
+										<img class="news-item-thumbnail" src="<?php echo $post_highlight->featured_image_src; ?>" alt="<?php echo $post_highlight->title->rendered; ?>" />
 									</div>
 
 									<div class="bottom-0 left-0 absolute z-10 p-8">
@@ -85,7 +50,7 @@ get_header();
 										</span>
 
 										<h2 class="text-2xl xl:text-3xl 2xl:text-[46px] font-black font-red-hat-display text-white mt-2">
-											<?php echo get_limit_words(get_the_title(), 8); ?>
+											<?php echo get_limit_words($post_highlight->title->rendered, 8); ?>
 										</h2>
 
 										<p class="text-base sxl:text-lg 2xl:text-xl font-semibold font-red-hat-display uppercase tracking-widest hover:underline text-[#8DAA32]">
@@ -94,7 +59,7 @@ get_header();
 									</div>
 								</a>
 						<?php
-							endwhile;
+							endif;
 						endif;
 
 						wp_reset_query();
@@ -133,13 +98,7 @@ get_header();
 
 					<div class="col-span-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
 						<?php
-						$posts_ids_hidden = [];
-
-						$link_pattern = get_field('link_padrao_portal', 'option');
-
-						$posts_categories_news_detail_uri = 'wp-json/wp/v2/posts?categories=13,24';
-
-						$request_posts = wp_remote_get($link_pattern . $posts_categories_news_detail_uri);
+						$request_posts = wp_remote_get(get_posts_other_api($posts_ids_hidden));
 
 						if (!is_wp_error($request_posts)) :
 							$body = wp_remote_retrieve_body($request_posts);

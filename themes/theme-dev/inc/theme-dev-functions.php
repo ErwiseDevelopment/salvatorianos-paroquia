@@ -840,6 +840,76 @@ function my_login_logo_url()
 }
 add_filter('login_headerurl', 'my_login_logo_url');
 
+function get_base_api(): string
+{
+    $link_pattern = get_field('link_padrao_portal', 'option');
+
+    $base_api = 'wp-json/wp/v2/posts';
+
+    return $link_pattern  . $base_api;
+}
+
+function get_posts_detail_api(string $type = 'main' | 'highlight' | 'other_highlight', array $posts_not_id = []): string
+{
+    $settings = [
+        'main' => [
+            'slug'     => 'main',
+            'per_page' => 1,
+        ],
+
+        'highlight' => [
+            'slug'         => 'highlight',
+        ],
+
+        'other_highlight' => [
+            'slug'         => 'other_highlight',
+        ],
+    ];
+
+    $categories = [];
+
+    array_push($categories, get_field('categoria_editoria', 'option'));
+
+    array_push($categories, get_field('categoria_noticia', 'option'));
+
+    array_push($categories, get_field('categoria_destaque', 'option'));
+
+    $categories_list = implode(',', $categories);
+
+    if ($settings[$type]['slug'] == 'main') {
+        return get_base_api() . '?categories=' . $categories_list . '&per_page=' . $settings[$type]['per_page'] . '&cat_relation=AND';
+    }
+
+    $posts_not_list = implode(',', $posts_not_id);
+
+    // if ($settings[$type]['slug'] == 'highlight') {
+    //     return get_base_api() . '?categories=' . $categories_list . '&per_page=' . $settings[$type]['per_page'] . '&cat_relation=AND&post_not_in=' . $posts_not_list;
+    // }
+
+    return get_base_api() . '?categories=' . $categories_list . '&cat_relation=AND&post_not_in=' . $posts_not_list;
+}
+
+function get_posts_api(): string
+{
+    $link_pattern = get_field('link_padrao_portal', 'option');
+
+    $base_api = 'wp-json/wp/v2/posts';
+
+    $category_editorial = get_field('categoria_editoria', 'option');
+
+    $category_news = get_field('categoria_noticia', 'option');
+
+    $categories = [];
+
+    array_push($categories, $category_editorial);
+
+    array_push($categories, $category_news);
+
+    $categories_list = implode(',', $categories);
+
+    return $link_pattern . $base_api . '?categories=' . $categories_list . '&cat_relation=AND';
+}
+
 /**
  * Enqueue scripts and styles.
  */

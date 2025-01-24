@@ -9,14 +9,10 @@
                 <?php
                 $posts_ids_hidden = [];
 
-                $link_pattern = get_field('link_padrao_portal', 'option');
+                $request_post = wp_remote_get(get_posts_detail_api('main'));
 
-                $posts_categories_news_detail_uri = 'wp-json/wp/v2/posts?categories=13,24,27';
-
-                $request_posts = wp_remote_get($link_pattern . $posts_categories_news_detail_uri);
-
-                if (!is_wp_error($request_posts)) :
-                    $body = wp_remote_retrieve_body($request_posts);
+                if (!is_wp_error($request_post)) :
+                    $body = wp_remote_retrieve_body($request_post);
 
                     $data = json_decode($body);
 
@@ -54,11 +50,7 @@
 
                 <!-- news featured -->
                 <?php
-                $posts_categories_news_detail_uri = 'wp-json/wp/v2/posts?categories=13,24,27';
-
-                $post_not_uri = '&post__not_in=' . $post_highlight->id;
-
-                $request_posts = wp_remote_get($link_pattern . $posts_categories_news_detail_uri . $post_not_uri);
+                $request_posts = wp_remote_get(get_posts_detail_api('highlight', $posts_ids_hidden));
 
                 if (!is_wp_error($request_posts)) :
                     $body = wp_remote_retrieve_body($request_posts);
@@ -105,38 +97,55 @@
                 <!-- end news featured -->
 
                 <?php
-                $posts_other_highlight = array_slice($data, 2);
-
                 $count = 0;
 
-                foreach ($posts_other_highlight as $rest_post):
-                    array_push($posts_ids_hidden, $rest_post->id);
+                echo "<pre>";
+                var_dump($posts_ids_hidden);
+                echo "</pre>";
 
-                    $count++;
+                $request_posts = wp_remote_get(get_posts_detail_api('highlight', $posts_ids_hidden));
+
+                if (!is_wp_error($request_posts)) :
+                    $body = wp_remote_retrieve_body($request_posts);
+
+                    $posts_other_highlight = json_decode($body);
+
+                    if (!is_wp_error($posts_other_highlight)) :
+
+                        $post_limit = 2;
+
+                        $count = 0;
+
+                        foreach ($posts_other_highlight as $rest_post):
+                            array_push($posts_ids_hidden, $rest_post->id);
+
+                            $count++;
                 ?>
-                    <a class="news-item col-span-1 row-span-1" href="<?php echo $rest_post->link; ?>">
-                        <?php echo get_post_thumbnail_custom('news-item-thumbnail') ?>
+                            <a class="news-item col-span-1 row-span-1" href="<?php echo $rest_post->link; ?>">
+                                <?php echo get_post_thumbnail_custom('news-item-thumbnail') ?>
 
-                        <img class="news-item-thumbnail" src="<?php echo $rest_post->featured_image_src; ?>" alt="<?php echo $post_highlight->title->rendered; ?>" />
+                                <img class="news-item-thumbnail" src="<?php echo $rest_post->featured_image_src; ?>" alt="<?php echo $rest_post->title->rendered; ?>" />
 
-                        <div class="bottom-0 left-0 absolute z-10 p-5">
-                            <span class="news-item-emphasis text-xs" style="background-image: linear-gradient(to right, <?php echo $news_category['colors']['primary']; ?>, <?php echo $news_category['colors']['secondary']; ?>)">
-                                Paróquia
-                            </span>
+                                <div class="bottom-0 left-0 absolute z-10 p-5">
+                                    <span class="news-item-emphasis text-xs" style="background-image: linear-gradient(to right, <?php echo $news_category['colors']['primary']; ?>, <?php echo $news_category['colors']['secondary']; ?>)">
+                                        Paróquia
+                                    </span>
 
-                            <h2 class="news-item-title text-base 2xl:text-[17px]">
-                                <?php echo $post_highlight->title->rendered; ?>
-                            </h2>
+                                    <h2 class="news-item-title text-base 2xl:text-[17px]">
+                                        <?php echo $rest_post->title->rendered; ?>
+                                    </h2>
 
-                            <p class="news-item-read-more text-[8px] text-white">
-                                Leia mais >
-                            </p>
-                        </div>
-                    </a>
+                                    <p class="news-item-read-more text-[8px] text-white">
+                                        Leia mais >
+                                    </p>
+                                </div>
+                            </a>
                 <?php
-                    if ($post_limit == $count)
-                        break;
-                endforeach;
+                            if ($post_limit == $count)
+                                break;
+                        endforeach;
+                    endif;
+                endif;
                 ?>
             </div>
         </div>
@@ -148,11 +157,7 @@
 
                 <!-- loop -->
                 <?php
-                $posts_hidden = implode(',', $posts_ids_hidden);
-
-                $post_not_uri = '&post__not_in=' . $posts_hidden;
-
-                $request_posts = wp_remote_get($link_pattern . $posts_categories_news_detail_uri . $post_not_uri);
+                $request_posts = wp_remote_get(get_posts_detail_api('other_highlight', $posts_ids_hidden));
 
                 $posts_limit = 4;
 
