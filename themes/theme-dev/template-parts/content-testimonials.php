@@ -15,11 +15,11 @@ if (have_rows('general_depoimentos', 'option')) {
 ?>
 <section class="bg-cover bg-no-repeat py-20" style="background-image: url(<?php echo $testimonials_background; ?>)">
 
-    <div class="container grid grid-cols-3 gap-10">
+    <div class="container grid grid-cols-1 lg:grid-cols-3 gap-10">
 
         <div class="col-span-full">
 
-            <h3 class="text-6xl font-bold font-abril-display text-center text-white">
+            <h3 class="text-4xl lg:text-6xl font-bold font-abril-display text-center text-white">
                 Depoimento dos Paróquianos
             </h3>
         </div>

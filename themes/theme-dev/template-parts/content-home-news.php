@@ -23,7 +23,11 @@
                 ?>
                         <a class="news-item" href="<?php echo $post_highlight->link; ?>">
 
-                            <img class="news-item-thumbnail" src="<?php echo $post_highlight->featured_image_src; ?>" alt="<?php echo $post_highlight->title->rendered; ?>" />
+                            <?php if (isset($post_highlight->featured_image_src)): ?>
+                                <img class="news-item-thumbnail" src="<?php echo $post_highlight->featured_image_src; ?>" alt="<?php echo $post_highlight->title->rendered; ?>" />
+                            <?php else: ?>
+                                <div class="w-full h-full bg-gray-100"></div>
+                            <?php endif; ?>
 
                             <div class="bottom-0 left-0 absolute z-10 p-8">
                                 <span class="news-item-emphasis 2xl:text-xl bg-gradient-theme">
@@ -71,7 +75,11 @@
                             <a class="news-item col-span-full row-span-1" href="<?php echo $rest_post->link; ?>">
                                 <?php echo get_post_thumbnail_custom('news-item-thumbnail') ?>
 
-                                <img class="news-item-thumbnail" src="<?php echo $rest_post->featured_image_src; ?>" alt="<?php echo $post_highlight->title->rendered; ?>" />
+                                <?php if (isset($rest_post->featured_image_src)): ?>
+                                    <img class="news-item-thumbnail" src="<?php echo $rest_post->featured_image_src; ?>" alt="<?php echo $rest_post->title->rendered; ?>" />
+                                <?php else: ?>
+                                    <div class="w-full h-full bg-gray-100"></div>
+                                <?php endif; ?>
 
                                 <div class="bottom-0 left-0 absolute z-10 p-5">
                                     <span class="news-item-emphasis text-xs 2xl:text-sm bg-gradient-theme">
@@ -99,10 +107,6 @@
                 <?php
                 $count = 0;
 
-                echo "<pre>";
-                var_dump($posts_ids_hidden);
-                echo "</pre>";
-
                 $request_posts = wp_remote_get(get_posts_detail_api('highlight', $posts_ids_hidden));
 
                 if (!is_wp_error($request_posts)) :
@@ -124,7 +128,11 @@
                             <a class="news-item col-span-1 row-span-1" href="<?php echo $rest_post->link; ?>">
                                 <?php echo get_post_thumbnail_custom('news-item-thumbnail') ?>
 
-                                <img class="news-item-thumbnail" src="<?php echo $rest_post->featured_image_src; ?>" alt="<?php echo $rest_post->title->rendered; ?>" />
+                                <?php if (isset($rest_post->featured_image_src)): ?>
+                                    <img class="news-item-thumbnail" src="<?php echo $rest_post->featured_image_src; ?>" alt="<?php echo $rest_post->title->rendered; ?>" />
+                                <?php else: ?>
+                                    <div class="w-full h-full bg-gray-100"></div>
+                                <?php endif; ?>
 
                                 <div class="bottom-0 left-0 absolute z-10 p-5">
                                     <span class="news-item-emphasis text-xs" style="background-image: linear-gradient(to right, <?php echo $news_category['colors']['primary']; ?>, <?php echo $news_category['colors']['secondary']; ?>)">

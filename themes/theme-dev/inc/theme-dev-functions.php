@@ -840,6 +840,98 @@ function my_login_logo_url()
 }
 add_filter('login_headerurl', 'my_login_logo_url');
 
+function get_options_page_api()
+{
+    // http: //erwise.test/salvatorianos/wp-json/acf/v3/options/options
+
+    $link_pattern = get_field('link_padrao_portal', 'option');
+
+    $link_option = get_field('link_pagina_de_opcoes', 'option');
+
+    return $link_pattern . $link_option;
+}
+
+function get_menu(): array
+{
+    return [
+        'menu_top' => [
+            [
+                'title' => 'Institucional',
+                'url'   => 'institucional',
+                'last'  => false
+            ],
+
+            [
+                'title' => 'Padroeira',
+                'url'   => 'padroeira',
+                'last'  => false
+            ],
+
+            [
+                'title' => 'Secretaria',
+                'url'   => 'secretaria',
+                'last'  => false
+            ],
+
+            [
+                'title' => 'Evangelização',
+                'url'   => 'evangelizacao',
+                'last'  => false
+            ],
+
+            [
+                'title' => 'Comunicação',
+                'url'   => 'comunicacao',
+                'last'  => true
+            ],
+        ],
+
+        'menu_bottom' => [
+            [
+                'title' => 'Dízimo',
+                'url'   => 'dizimo',
+                'first' => true,
+                'last'  => false
+            ],
+
+            [
+                'title' => 'Agenda',
+                'url'   => 'agenda',
+                'first' => false,
+                'last'  => false
+            ],
+
+            [
+                'title' => 'Blog',
+                'url'   => 'blog',
+                'first' => false,
+                'last'  => false
+            ],
+
+            [
+                'title' => 'Notícias',
+                'url'   => 'noticias',
+                'first' => false,
+                'last'  => false
+            ],
+
+            [
+                'title' => 'Faça sua doação',
+                'url'   => 'faca-sua-doacao',
+                'first' => false,
+                'last'  => false
+            ],
+
+            [
+                'title' => 'Vela virtual',
+                'url'   => 'vela-virtual',
+                'first' => false,
+                'last'  => true
+            ],
+        ]
+    ];
+}
+
 function get_base_api(): string
 {
     $link_pattern = get_field('link_padrao_portal', 'option');

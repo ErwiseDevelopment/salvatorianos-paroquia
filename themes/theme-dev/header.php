@@ -110,35 +110,17 @@
                                     </a>
                                 </li>
 
-                                <li class="main-nav-item">
-                                    <a class="main-nav-link <?php echo $request_uri == 'institucional' ? 'is-active' : ''; ?>" href="<?php echo get_home_url(null, '/institucional') ?>">
-                                        Institucional
-                                    </a>
-                                </li>
-
-                                <li class="main-nav-item">
-                                    <a class="main-nav-link <?php echo $request_uri == 'pe-jordan' ? 'is-active' : ''; ?>" href="<?php echo get_home_url(null, '/pe-jordan') ?>">
-                                        Padroeira
-                                    </a>
-                                </li>
-
-                                <li class="main-nav-item">
-                                    <a class="main-nav-link <?php echo $request_uri == 'pe-jordan' ? 'is-active' : ''; ?>" href="<?php echo get_home_url(null, '/pe-jordan') ?>">
-                                        Secretaria
-                                    </a>
-                                </li>
-
-                                <li class="main-nav-item">
-                                    <a class="main-nav-link <?php echo $request_uri == 'pe-jordan' ? 'is-active' : ''; ?>" href="<?php echo get_home_url(null, '/pe-jordan') ?>">
-                                        Evangelização
-                                    </a>
-                                </li>
-
-                                <li class="main-nav-item">
-                                    <a class="main-nav-link <?php echo $request_uri == 'vocacional' ? 'is-active' : ''; ?> rounded-tr-[9999px] rounded-br-[9999px]" href="<?php echo get_home_url(null, '/vocacional') ?>">
-                                        Comunicação
-                                    </a>
-                                </li>
+                                <?php
+                                foreach (get_menu()['menu_top'] as $menu_item) :
+                                ?>
+                                    <li class="main-nav-item">
+                                        <a class="main-nav-link <?php echo $request_uri == $menu_item['url'] ? 'is-active' : ''; ?> <?php echo $menu_item['last'] ? 'rounded-tr-[9999px] rounded-br-[9999px]' : '' ?>" href="<?php echo get_home_url(null, '/' . $menu_item['url']) ?>">
+                                            <?php echo $menu_item['title']; ?>
+                                        </a>
+                                    </li>
+                                <?php
+                                endforeach;
+                                ?>
                             </ul>
                         </div>
 
@@ -148,41 +130,17 @@
 
                             <ul class="h-full grid grid-cols-6">
 
-                                <li class="main-nav-item">
-                                    <a class="main-nav-link <?php echo $request_uri == 'paroquias' ? 'is-active' : ''; ?> rounded-tl-full rounded-bl-full xl:rounded-none bg-[#83AB1E]" href="<?php echo get_home_url(null, '/paroquias') ?>">
-                                        Dízimo
-                                    </a>
-                                </li>
-
-                                <li class="main-nav-item">
-                                    <a class="main-nav-link <?php echo $request_uri == 'educacao' ? 'is-active' : ''; ?> bg-[#549D2C]" href="<?php echo get_home_url(null, '/educacao') ?>">
-                                        Agenda
-                                    </a>
-                                </li>
-
-                                <li class="main-nav-item">
-                                    <a class="main-nav-link <?php echo $request_uri == 'obras-sociais' ? 'is-active' : ''; ?> bg-[#3A9731]" href="<?php echo get_home_url(null, '/obras-sociais') ?>">
-                                        Blog
-                                    </a>
-                                </li>
-
-                                <li class="main-nav-item">
-                                    <a class="main-nav-link <?php echo $request_uri == 'obras-sociais' ? 'is-active' : ''; ?> bg-[#3A9731]" href="<?php echo get_home_url(null, '/obras-sociais') ?>">
-                                        Notícias
-                                    </a>
-                                </li>
-
-                                <li class="main-nav-item">
-                                    <a class="main-nav-link <?php echo $request_uri == 'obras-sociais' ? 'is-active' : ''; ?> bg-[#3A9731]" href="<?php echo get_home_url(null, '/obras-sociais') ?>">
-                                        Faça sua doação
-                                    </a>
-                                </li>
-
-                                <li class="main-nav-item">
-                                    <a class="main-nav-link <?php echo $request_uri == 'revistas' ? 'is-active' : ''; ?> rounded-tr-[9999px] rounded-br-[9999px] bg-[#058E36]" href="<?php echo get_home_url(null, '/revistas') ?>">
-                                        Vela virtual
-                                    </a>
-                                </li>
+                                <?php
+                                foreach (get_menu()['menu_bottom'] as $menu_item) :
+                                ?>
+                                    <li class="main-nav-item">
+                                        <a class="main-nav-link <?php echo $request_uri == $menu_item['url'] ? 'is-active' : ''; ?> <?php echo $menu_bottom['first'] ? 'rounded-tl-full rounded-bl-full xl:rounded-none' : '' ?> <?php echo $menu_item['last'] ? 'rounded-tr-[9999px] rounded-br-[9999px]' : '' ?> bg-[#83AB1E]" href="<?php echo get_home_url(null, '/' . $menu_item['url']) ?>">
+                                            <?php echo $menu_item['title']; ?>
+                                        </a>
+                                    </li>
+                                <?php
+                                endforeach;
+                                ?>
                             </ul>
                         </div>
                     </div>
