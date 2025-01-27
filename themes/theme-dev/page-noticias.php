@@ -27,7 +27,9 @@ get_header();
 
 					<div class="w-full">
 						<?php
-						$request_post = wp_remote_get(get_post_detail_api());
+						$posts_ids_hidden = [];
+
+						$request_post = wp_remote_get(get_posts_detail_api('main'));
 
 						if (!is_wp_error($request_post)) :
 							$body = wp_remote_retrieve_body($request_post);
@@ -39,7 +41,7 @@ get_header();
 							if (!is_wp_error($post_highlight)) :
 								array_push($posts_ids_hidden, $post_highlight->id);
 						?>
-								<a class="news-item" href="<?php echo $post_highlight->link; ?>">
+								<a class="news-item h-[320px]" href="<?php echo $post_highlight->link; ?>">
 									<div class="w-full h-full">
 										<img class="news-item-thumbnail" src="<?php echo $post_highlight->featured_image_src; ?>" alt="<?php echo $post_highlight->title->rendered; ?>" />
 									</div>
@@ -98,7 +100,7 @@ get_header();
 
 					<div class="col-span-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
 						<?php
-						$request_posts = wp_remote_get(get_posts_other_api($posts_ids_hidden));
+						$request_posts = wp_remote_get(get_posts_api($posts_ids_hidden));
 
 						if (!is_wp_error($request_posts)) :
 							$body = wp_remote_retrieve_body($request_posts);

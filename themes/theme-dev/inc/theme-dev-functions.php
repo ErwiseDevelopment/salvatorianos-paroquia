@@ -985,7 +985,7 @@ function get_posts_detail_api(string $type = 'main' | 'highlight' | 'other_highl
     return get_base_api() . '?categories=' . $categories_list . '&cat_relation=AND&post__not_in=' . $posts_not_list;
 }
 
-function get_posts_api(): string
+function get_posts_api($posts_not_id): string
 {
     $link_pattern = get_field('link_padrao_portal', 'option');
 
@@ -1003,7 +1003,9 @@ function get_posts_api(): string
 
     $categories_list = implode(',', $categories);
 
-    return $link_pattern . $base_api . '?categories=' . $categories_list . '&cat_relation=AND';
+    $posts_not_list = implode(',', $posts_not_id);
+
+    return $link_pattern . $base_api . '?categories=' . $categories_list . '&cat_relation=AND&post__not_in=' . $posts_not_list;
 }
 
 /**

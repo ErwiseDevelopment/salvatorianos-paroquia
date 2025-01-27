@@ -15,7 +15,7 @@ b {
 
 @layer components {
   .banner-page {
-    @apply h-[460px];
+    @apply h-[220px] lg:h-[460px];
   }
 
   .banner-post {

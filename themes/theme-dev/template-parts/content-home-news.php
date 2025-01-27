@@ -5,13 +5,11 @@
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-2">
 
             <!-- news main featured -->
-            <div>
+            <div class="lg:h-[560px]">
                 <?php
                 $posts_ids_hidden = [];
 
                 $request_post = wp_remote_get(get_posts_detail_api('main'));
-
-                dd($request_post);
 
                 if (!is_wp_error($request_post)) :
                     $body = wp_remote_retrieve_body($request_post);
@@ -23,7 +21,7 @@
                     if (!is_wp_error($post_main)) :
                         array_push($posts_ids_hidden, $post_main->id);
                 ?>
-                        <a class="news-item" style="display:none!important" href="<?php echo $post_main->link; ?>">
+                        <a class="news-item" href="<?php echo $post_main->link; ?>">
 
                             <?php if (isset($post_main->featured_image_src)): ?>
                                 <img class="news-item-thumbnail" src="<?php echo $post_main->featured_image_src; ?>" alt="<?php echo $post_main->title->rendered; ?>" />
@@ -68,7 +66,7 @@
                     if (!is_wp_error($post_highlight)) :
                         array_push($posts_ids_hidden, $post_highlight->id);
                 ?>
-                        <a class="news-item col-span-full row-span-1" style="display:none!important" href="<?php echo $post_highlight->link; ?>">
+                        <a class="news-item col-span-full row-span-1" href="<?php echo $post_highlight->link; ?>">
                             <?php echo get_post_thumbnail_custom('news-item-thumbnail') ?>
 
                             <?php if (isset($post_highlight->featured_image_src)): ?>
@@ -128,7 +126,7 @@
                                 <?php endif; ?>
 
                                 <div class="bottom-0 left-0 absolute z-10 p-5">
-                                    <span class="news-item-emphasis text-xs" style="background-image: linear-gradient(to right, <?php echo $news_category['colors']['primary']; ?>, <?php echo $news_category['colors']['secondary']; ?>)">
+                                    <span class="news-item-emphasis text-xs bg-gradient-theme">
                                         Paróquia
                                     </span>
 
