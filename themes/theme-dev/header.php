@@ -81,7 +81,7 @@
             <header class="<?php echo get_hidden_banner_title($post->post_type, $post->post_name) === true ? 'w-full top-0 left-0 absolute' : ''; ?> <?php echo $has_header_background ? 'header-background' : ''; ?>"
                 style="<?php echo $has_header_background ? 'background-image: url(' . get_template_directory_uri() . '/resources/images/header-background.png)' : '' ?>">
 
-                <div class="container flex flex-wrap px-2 xl:px-4">
+                <div class="container hidden lg:flex flex-wrap px-2 xl:px-4">
 
                     <div class="w-3/12 relative hidden lg:block">
 
@@ -144,6 +144,7 @@
                             </ul>
                         </div>
                     </div>
+
                     <?php
                     if ($post->post_parent != 0) {
                         $page_parent_name = get_post($post->post_parent)->post_name;
@@ -157,6 +158,73 @@
                         }
                     }
                     ?>
+                </div>
+
+                <div
+                    class="container h-10 relative flex lg:hidden bg-white"
+                    x-data="{ openMenu: false }">
+
+                    <div class="w-3/12 bg-red-500">
+
+                    </div>
+
+                    <div class="w-9/12 flex justify-end items-center">
+                        <button
+                            class="border- border-black rounded-md py-[2px] px-2"
+                            x-on:click="openMenu = !openMenu">
+                            <svg class="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                                <path d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div
+                        class="w-full h-screen top-0 left-0 fixed flex flex-col gap-y-6 bg-gradient-theme p-8 z-50"
+                        x-show="openMenu"
+                        x-cloak
+                        x-transition:enter="transition duration-500"
+                        x-transition:enter-start="translate-x-full"
+                        x-transition:enter-end="translate-x-0"
+                        x-transition:leave="transition duration-500"
+                        x-transition:leave-start="translate-x-0"
+                        x-transition:leave-end="translate-x-full">
+
+                        <div class="flex justify-end">
+                            <button x-on:click="openMenu = !openMenu">
+                                <svg class="w-8 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                                    <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div>
+                            <ul class="flex flex-col gap-y-1">
+                                <?php
+                                foreach (get_menu()['menu_top'] as $menu_item) :
+                                ?>
+                                    <li class="main-nav-item">
+                                        <a class="text-xl font-medium text-center text-white <?php echo $request_uri == $menu_item['url'] ? 'is-active' : ''; ?>" href="<?php echo get_home_url(null, '/' . $menu_item['url']) ?>">
+                                            <?php echo $menu_item['title']; ?>
+                                        </a>
+                                    </li>
+                                <?php
+                                endforeach;
+                                ?>
+
+                                <?php
+                                foreach (get_menu()['menu_bottom'] as $menu_item) :
+                                ?>
+                                    <li class="main-nav-item">
+                                        <a class="text-xl font-medium text-center text-white <?php echo $request_uri == $menu_item['url'] ? 'is-active' : ''; ?>" href="<?php echo get_home_url(null, '/' . $menu_item['url']) ?>">
+                                            <?php echo $menu_item['title']; ?>
+                                        </a>
+                                    </li>
+                                <?php
+                                endforeach;
+                                ?>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </header>
 
