@@ -32,7 +32,7 @@ add_action('init', 'create_post_type');
 function create_taxonomy()
 {
     // Registrar a taxonomia 'editoria' para todos os tipos de post
-    $post_types = array('agendas', 'locais', 'materiais', 'banners', 'videos',  'galeria');
+    $post_types = array('agendas', 'locais', 'materiais', 'videos',  'galeria');
 
     register_taxonomy('editoria', $post_types, array(
         'labels'             => array(

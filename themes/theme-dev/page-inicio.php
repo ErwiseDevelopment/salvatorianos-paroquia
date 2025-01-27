@@ -24,7 +24,7 @@ get_header();
 			<?php
 			$editorial_category_name = get_categories_setting()['editorials']['portal']['name'];
 
-			echo get_template_part('template-parts/content', 'general-banner', get_query_custom('banners', $editorial_category_name))
+			echo get_template_part('template-parts/content', 'general-banner')
 			?>
 			<!-- end banner -->
 

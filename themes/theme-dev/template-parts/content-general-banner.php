@@ -6,6 +6,12 @@
 
             <!-- slide -->
             <?php
+            $args = array(
+                'posts_per_page' => -1,
+                'post_type'      => 'banners',
+                'order'          => 'DESC'
+            );
+
             $banners = new WP_Query($args);
 
             if ($banners->have_posts()):
