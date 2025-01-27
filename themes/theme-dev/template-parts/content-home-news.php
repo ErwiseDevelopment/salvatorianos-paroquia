@@ -11,20 +11,22 @@
 
                 $request_post = wp_remote_get(get_posts_detail_api('main'));
 
+                dd($request_post);
+
                 if (!is_wp_error($request_post)) :
                     $body = wp_remote_retrieve_body($request_post);
 
                     $data = json_decode($body);
 
-                    $post_highlight = $data[0];
+                    $post_main = $data[0];
 
-                    if (!is_wp_error($post_highlight)) :
-                        array_push($posts_ids_hidden, $post_highlight->id);
+                    if (!is_wp_error($post_main)) :
+                        array_push($posts_ids_hidden, $post_main->id);
                 ?>
-                        <a class="news-item" href="<?php echo $post_highlight->link; ?>">
+                        <a class="news-item" style="display:none!important" href="<?php echo $post_main->link; ?>">
 
-                            <?php if (isset($post_highlight->featured_image_src)): ?>
-                                <img class="news-item-thumbnail" src="<?php echo $post_highlight->featured_image_src; ?>" alt="<?php echo $post_highlight->title->rendered; ?>" />
+                            <?php if (isset($post_main->featured_image_src)): ?>
+                                <img class="news-item-thumbnail" src="<?php echo $post_main->featured_image_src; ?>" alt="<?php echo $post_main->title->rendered; ?>" />
                             <?php else: ?>
                                 <div class="w-full h-full bg-gray-100"></div>
                             <?php endif; ?>
@@ -35,7 +37,7 @@
                                 </span>
 
                                 <h2 class="news-item-title 2xl:text-4xl">
-                                    <?php echo $post_highlight->title->rendered; ?>
+                                    <?php echo $post_main->title->rendered; ?>
                                 </h2>
 
                                 <p class="news-item-read-more text-sm 2xl:text-base text-[#8DAA32]">
@@ -61,44 +63,35 @@
 
                     $data = json_decode($body);
 
-                    if (!is_wp_error($data)) :
+                    $post_highlight = $data[0];
 
-                        $post_limit = 2;
-
-                        $count = 0;
-
-                        foreach ($data as $rest_post):
-                            array_push($posts_ids_hidden, $rest_post->id);
-
-                            $count++;
+                    if (!is_wp_error($post_highlight)) :
+                        array_push($posts_ids_hidden, $post_highlight->id);
                 ?>
-                            <a class="news-item col-span-full row-span-1" href="<?php echo $rest_post->link; ?>">
-                                <?php echo get_post_thumbnail_custom('news-item-thumbnail') ?>
+                        <a class="news-item col-span-full row-span-1" style="display:none!important" href="<?php echo $post_highlight->link; ?>">
+                            <?php echo get_post_thumbnail_custom('news-item-thumbnail') ?>
 
-                                <?php if (isset($rest_post->featured_image_src)): ?>
-                                    <img class="news-item-thumbnail" src="<?php echo $rest_post->featured_image_src; ?>" alt="<?php echo $rest_post->title->rendered; ?>" />
-                                <?php else: ?>
-                                    <div class="w-full h-full bg-gray-100"></div>
-                                <?php endif; ?>
+                            <?php if (isset($post_highlight->featured_image_src)): ?>
+                                <img class="news-item-thumbnail" src="<?php echo $post_highlight->featured_image_src; ?>" alt="<?php echo $post_highlight->title->rendered; ?>" />
+                            <?php else: ?>
+                                <div class="w-full h-full bg-gray-100"></div>
+                            <?php endif; ?>
 
-                                <div class="bottom-0 left-0 absolute z-10 p-5">
-                                    <span class="news-item-emphasis text-xs 2xl:text-sm bg-gradient-theme">
-                                        Notícia
-                                    </span>
+                            <div class="bottom-0 left-0 absolute z-10 p-5">
+                                <span class="news-item-emphasis text-xs 2xl:text-sm bg-gradient-theme">
+                                    Notícia
+                                </span>
 
-                                    <h2 class="news-item-title text-xl 2xl:text-[26px]">
-                                        <?php echo $rest_post->title->rendered; ?>
-                                    </h2>
+                                <h2 class="news-item-title text-xl 2xl:text-[26px]">
+                                    <?php echo $post_highlight->title->rendered; ?>
+                                </h2>
 
-                                    <p class="news-item-read-more text-[8px] 2xl:text-xs text-white">
-                                        Leia mais >
-                                    </p>
-                                </div>
-                            </a>
+                                <p class="news-item-read-more text-[8px] 2xl:text-xs text-white">
+                                    Leia mais >
+                                </p>
+                            </div>
+                        </a>
                 <?php
-                            if ($post_limit == $count)
-                                break;
-                        endforeach;
                     endif;
                 endif;
                 ?>

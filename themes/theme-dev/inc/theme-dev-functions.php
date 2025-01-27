@@ -22,7 +22,10 @@ register_nav_menus(array(
 
 function dd($var)
 {
+    echo '<pre>';
     var_dump($var);
+    echo '</pre>';
+
     die();
 }
 
@@ -950,7 +953,8 @@ function get_posts_detail_api(string $type = 'main' | 'highlight' | 'other_highl
         ],
 
         'highlight' => [
-            'slug'         => 'highlight',
+            'slug'     => 'highlight',
+            'per_page' => 1
         ],
 
         'other_highlight' => [
@@ -974,11 +978,11 @@ function get_posts_detail_api(string $type = 'main' | 'highlight' | 'other_highl
 
     $posts_not_list = implode(',', $posts_not_id);
 
-    // if ($settings[$type]['slug'] == 'highlight') {
-    //     return get_base_api() . '?categories=' . $categories_list . '&per_page=' . $settings[$type]['per_page'] . '&cat_relation=AND&post_not_in=' . $posts_not_list;
-    // }
+    if ($settings[$type]['slug'] == 'highlight') {
+        return get_base_api() . '?categories=' . $categories_list . '&per_page=' . $settings[$type]['per_page'] . '&cat_relation=AND&post__not_in=' . $posts_not_list;
+    }
 
-    return get_base_api() . '?categories=' . $categories_list . '&cat_relation=AND&post_not_in=' . $posts_not_list;
+    return get_base_api() . '?categories=' . $categories_list . '&cat_relation=AND&post__not_in=' . $posts_not_list;
 }
 
 function get_posts_api(): string
