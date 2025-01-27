@@ -164,8 +164,10 @@
                     class="container h-10 relative flex lg:hidden bg-white"
                     x-data="{ openMenu: false }">
 
-                    <div class="w-3/12 bg-red-500">
-
+                    <div class="w-3/12">
+                        <a class="w-[100px] h-[100px] -translate-y-12 rounded-full absolute flex justify-center items-end bg-white pb-1 z-10" style="box-shadow:rgba(0, 0, 0, 0.1) 0px 0px 57px 0px inset" href="<?php echo get_home_url(null, '/') ?>">
+                            <img class="w-12" src="<?php echo get_template_directory_uri() ?>/resources/images/logo-bja.png" alt="Salvatorianos" />
+                        </a>
                     </div>
 
                     <div class="w-9/12 flex justify-end items-center">

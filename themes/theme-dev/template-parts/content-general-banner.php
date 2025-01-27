@@ -1,4 +1,4 @@
-<section class="h-[120px] lg:h-[310px] xl:h-[388px] 2xl:h-[580px]">
+<section class="h-[120px] lg:h-[310px] xl:h-[388px] 2xl:h-[580px] mt-4 lg:mt-0">
     <!-- swiper -->
     <div class="swiper swiper-banner h-full js-swiper-banner">
 
