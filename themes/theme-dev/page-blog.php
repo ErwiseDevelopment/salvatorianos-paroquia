@@ -23,25 +23,27 @@ get_header();
 			<!-- news detail -->
 			<section class="pt-10 xl:pt-24">
 
-				<div class="container flex flex-wrap xl:px-24">
+				<div class="container flex flex-wrap">
 
-					<div class="w-full lg:w-7/12 xl:w-8/12 pr-4">
+					<div class="w-full">
 						<?php
-						$news_featured_args = array(
-							'posts_per_page' => 1,
-							'post_type'      => 'post',
-							'category_name'  => 'blog',
-							'order'          => 'DESC'
-						);
+						$posts_ids_hidden = [];
 
-						$news_featured = new WP_Query($news_featured_args);
+						$request_post = wp_remote_get(get_posts_detail_api('main'));
 
-						if ($news_featured->have_posts()):
-							while ($news_featured->have_posts()): $news_featured->the_post();
+						if (!is_wp_error($request_post)) :
+							$body = wp_remote_retrieve_body($request_post);
+
+							$data = json_decode($body);
+
+							$post_highlight = $data[0];
+
+							if (!is_wp_error($post_highlight)) :
+								array_push($posts_ids_hidden, $post_highlight->id);
 						?>
-								<a class="news-item" href="<?php the_permalink() ?>">
+								<a class="news-item h-[320px]" href="<?php echo $post_highlight->link; ?>">
 									<div class="w-full h-full">
-										<?php echo get_post_thumbnail_custom('news-item-thumbnail') ?>
+										<img class="news-item-thumbnail" src="<?php echo $post_highlight->featured_image_src; ?>" alt="<?php echo $post_highlight->title->rendered; ?>" />
 									</div>
 
 									<div class="bottom-0 left-0 absolute z-10 p-8">
@@ -50,7 +52,7 @@ get_header();
 										</span>
 
 										<h2 class="text-2xl xl:text-3xl 2xl:text-[46px] font-black font-red-hat-display text-white mt-2">
-											<?php echo get_limit_words(get_the_title(), 8); ?>
+											<?php echo get_limit_words($post_highlight->title->rendered, 8); ?>
 										</h2>
 
 										<p class="text-base sxl:text-lg 2xl:text-xl font-semibold font-red-hat-display uppercase tracking-widest hover:underline text-[#8DAA32]">
@@ -59,92 +61,44 @@ get_header();
 									</div>
 								</a>
 						<?php
-							endwhile;
+							endif;
 						endif;
-
-						wp_reset_query();
 						?>
-					</div>
-
-					<div class="w-full lg:w-5/12 xl:w-4/12">
-
-						<div class="border border-black bg-[#EDEDED] py-8 px-4">
-							<h3 class="text-2xl xl:text-4xl 2xl:text-[56px] font-black font-red-hat-display text-center text-[#7137F0]">
-								Categorias
-							</h3>
-
-							<ul class="mt-6">
-
-								<?php foreach (get_categories_setting()['editorials'] as $key => $value) : ?>
-									<?php if ($value['title'] != 'Portal'): ?>
-										<li class="mb-2 last:mb-0">
-											<a class="block text-base xl:text-xl 2xl:text-[26px] font-medium font-red-hat-display text-center text-white py-3" style="background-color: <?php echo $value['color']; ?>" href="<?php echo get_home_url(null, 'blog?editoria=' . $key); ?>">
-												<?php echo $value['title']; ?>
-											</a>
-										</li>
-									<?php endif; ?>
-								<?php endforeach; ?>
-							</ul>
-						</div>
 					</div>
 				</div>
 			</section>
 			<!-- end news detail -->
 
-			<!-- news -->
+			<!-- blogs -->
 			<section class="py-10 xl:pt-20 xl:pb-28">
 
 				<div class="container grid grid-cols-4 gap-4">
 
 					<div class="col-span-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
 						<?php
-						$news_category_slug = get_categories_setting()['categories']['blog']['slug'];
+						$request_posts = wp_remote_get(get_blogs_api($posts_ids_hidden));
 
-						$news_category = get_category_by_slug($news_category_slug);
+						if (!is_wp_error($request_posts)) :
+							$body = wp_remote_retrieve_body($request_posts);
 
-						if (isset($_GET['editoria'])) {
-							$editorial_category = get_category_by_slug($_GET['editoria']);
+							$data = json_decode($body);
 
-							$news_args = array(
-								'posts_per_page' => -1,
-								'post_type'      => 'post',
-								'tax_query'      => array(
-									'relation' => 'AND',
-									array(
-										'taxonomy' => 'category',
-										'field'    => 'term_id',
-										'terms'    => $news_category->term_id
-									),
-									array(
-										'taxonomy' => 'category',
-										'field'    => 'term_id',
-										'terms'    => $editorial_category->term_id
-									),
-								)
-							);
-						} else {
-							$news_args = array(
-								'posts_per_page' => -1,
-								'post_type'      => 'post',
-								'category_name'  => $news_category->slug,
-								'order'          => 'DESC'
-							);
-						}
+							if (!is_wp_error($data)) :
 
-						$news_editorial = new WP_Query($news_args);
+								foreach ($data as $rest_post):
+									// echo get_template_part('template-parts/components/content', 'new-item', get_new_item_setting(true));
 
-						if ($news_editorial->have_posts()) :
-							while ($news_editorial->have_posts()) : $news_editorial->the_post();
-								echo get_template_part('template-parts/components/content', 'new-item', get_new_item_setting(true));
-							endwhile;
+									$thumbnail = isset($rest_post->featured_image_src) ? $rest_post->featured_image_src : '';
+
+									echo get_template_part('template-parts/components/content', 'new-item', get_new_item_setting($thumbnail, $rest_post->title->rendered, $rest_post->content->rendered, $rest_post->excerpt->rendered, $rest_post->link));
+								endforeach;
+							endif;
 						endif;
-
-						wp_reset_query();
 						?>
 					</div>
 				</div>
 			</section>
-			<!-- end news -->
+			<!-- end blogs -->
 		<?php endwhile; ?>
 
 	</main><!-- #main -->
