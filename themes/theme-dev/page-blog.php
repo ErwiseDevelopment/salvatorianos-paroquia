@@ -78,8 +78,6 @@ get_header();
 						<?php
 						$request_posts = wp_remote_get(get_blogs_api($posts_ids_hidden));
 
-						dd(get_blogs_api($posts_ids_hidden));
-
 						if (!is_wp_error($request_posts)) :
 							$body = wp_remote_retrieve_body($request_posts);
 
