@@ -987,10 +987,6 @@ function get_posts_detail_api(string $type = 'main' | 'highlight' | 'other_highl
 
 function get_posts_api($posts_not_id): string
 {
-    $link_pattern = get_field('link_padrao_portal', 'option');
-
-    $base_api = 'wp-json/wp/v2/posts';
-
     $category_editorial = get_field('categoria_editoria', 'option');
 
     $category_news = get_field('categoria_noticia', 'option');
@@ -1005,7 +1001,28 @@ function get_posts_api($posts_not_id): string
 
     $posts_not_list = implode(',', $posts_not_id);
 
-    return $link_pattern . $base_api . '?categories=' . $categories_list . '&cat_relation=AND&post__not_in=' . $posts_not_list;
+    return get_base_api() . '?categories=' . $categories_list . '&cat_relation=AND&post__not_in=' . $posts_not_list;
+}
+
+function get_blogs_api($posts_not_id): string
+{
+    // https://salvatorianos.erwisedev-hml.com.br/wp-json/wp/v2/posts?categories=13,25&per_page=100&cat_relation=AND
+
+    $category_editorial = get_field('categoria_editoria', 'option');
+
+    $category_blog = get_field('categoria_blog', 'option');
+
+    $categories = [];
+
+    array_push($categories, $category_editorial);
+
+    array_push($categories, $category_blog);
+
+    $categories_list = implode(',', $categories);
+
+    $posts_not_list = implode(',', $posts_not_id);
+
+    return get_base_api() . '?categories=' . $categories_list . '&per_page=100&cat_relation=AND&post__not_in=' . $posts_not_list;
 }
 
 /**
